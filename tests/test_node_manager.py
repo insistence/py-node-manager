@@ -8,7 +8,7 @@ class TestNodeManager:
     def setup_method(self):
         """Set up test fixtures before each test method."""
         # Import here to avoid issues with pytest
-        from py_node.manager import NodeManager
+        from py_node_manager.manager import NodeManager
 
         self.NodeManager = NodeManager
 
@@ -40,7 +40,7 @@ class TestNodeManager:
             assert manager.node_version == '18.17.0'
             assert manager.is_cli is True
 
-    @patch('py_node.manager.subprocess.run')
+    @patch('py_node_manager.manager.subprocess.run')
     def test_check_nodejs_available_success(self, mock_run):
         """Test check_nodejs_available when Node.js is available"""
         # Mock subprocess.run to simulate successful Node.js detection
@@ -58,9 +58,9 @@ class TestNodeManager:
     def test_check_nodejs_available_not_found(self):
         """Test check_nodejs_available when Node.js is not found"""
         # Mock subprocess.run to simulate FileNotFoundError
-        from py_node.manager import NodeManager
+        from py_node_manager.manager import NodeManager
 
-        with patch('py_node.manager.subprocess.run', side_effect=FileNotFoundError):
+        with patch('py_node_manager.manager.subprocess.run', side_effect=FileNotFoundError):
             manager = NodeManager.__new__(NodeManager)  # Create instance without calling __init__
             is_available, version = manager.check_nodejs_available()
 
@@ -72,9 +72,9 @@ class TestNodeManager:
         # Mock subprocess.run to simulate non-zero return code
         mock_result = MagicMock()
         mock_result.returncode = 1
-        from py_node.manager import NodeManager
+        from py_node_manager.manager import NodeManager
 
-        with patch('py_node.manager.subprocess.run', return_value=mock_result):
+        with patch('py_node_manager.manager.subprocess.run', return_value=mock_result):
             manager = NodeManager.__new__(NodeManager)  # Create instance without calling __init__
             is_available, version = manager.check_nodejs_available()
 
@@ -85,7 +85,7 @@ class TestNodeManager:
     def test_get_command_alias_by_platform(self, platform_name):
         """Test get_command_alias_by_platform on different platforms"""
         # Mock platform.system() to return specific platform
-        with patch('py_node.manager.platform.system', return_value=platform_name):
+        with patch('py_node_manager.manager.platform.system', return_value=platform_name):
             # Mock the check_or_download_nodejs method to avoid actual Node.js checks
             with patch.object(self.NodeManager, 'check_or_download_nodejs', return_value=None):
                 manager = self.NodeManager(download_node=False, node_version='18.17.0')
@@ -108,21 +108,21 @@ class TestNodeManager:
     )
     def test_download_nodejs_url_generation(self, platform_name, machine, expected_url):
         """Test that download_nodejs generates correct URLs for different platforms"""
-        with patch('py_node.manager.platform.system', return_value=platform_name):
-            with patch('py_node.manager.platform.machine', return_value=machine):
-                with patch('py_node.manager.os.path.dirname', return_value='/test/path'):
-                    with patch('py_node.manager.os.path.abspath', return_value='/test/path'):
+        with patch('py_node_manager.manager.platform.system', return_value=platform_name):
+            with patch('py_node_manager.manager.platform.machine', return_value=machine):
+                with patch('py_node_manager.manager.os.path.dirname', return_value='/test/path'):
+                    with patch('py_node_manager.manager.os.path.abspath', return_value='/test/path'):
                         # Mock the check_or_download_nodejs method to avoid actual Node.js checks
                         with patch.object(self.NodeManager, 'check_or_download_nodejs', return_value=None):
                             manager = self.NodeManager(download_node=True, node_version='18.17.0')
                             # Mock the download method to avoid actual download
-                            with patch('py_node.manager.urllib.request.urlretrieve') as mock_urlretrieve:
-                                with patch('py_node.manager.os.makedirs'):
-                                    with patch('py_node.manager.os.path.exists', return_value=False):
-                                        with patch('py_node.manager.tarfile.open'):
-                                            with patch('py_node.manager.zipfile.ZipFile'):
-                                                with patch('py_node.manager.os.chmod'):
-                                                    with patch('py_node.manager.os.remove'):
+                            with patch('py_node_manager.manager.urllib.request.urlretrieve') as mock_urlretrieve:
+                                with patch('py_node_manager.manager.os.makedirs'):
+                                    with patch('py_node_manager.manager.os.path.exists', return_value=False):
+                                        with patch('py_node_manager.manager.tarfile.open'):
+                                            with patch('py_node_manager.manager.zipfile.ZipFile'):
+                                                with patch('py_node_manager.manager.os.chmod'):
+                                                    with patch('py_node_manager.manager.os.remove'):
                                                         try:
                                                             manager.download_nodejs()
                                                         except Exception:
@@ -133,8 +133,8 @@ class TestNodeManager:
                                                         called_url = mock_urlretrieve.call_args[0][0]
                                                         assert called_url == expected_url
 
-    @patch('py_node.manager.platform.system')
-    @patch('py_node.manager.platform.machine')
+    @patch('py_node_manager.manager.platform.system')
+    @patch('py_node_manager.manager.platform.machine')
     def test_download_nodejs_unsupported_platform(self, mock_machine, mock_system):
         """Test download_nodejs with unsupported platform"""
         mock_system.return_value = 'UnsupportedOS'
@@ -164,8 +164,8 @@ class TestNodeManager:
             manager = self.NodeManager(download_node=True, node_version='18.17.0')
 
             # Mock os.environ.copy() to return a known dictionary
-            with patch('py_node.manager.os.environ.copy', return_value={'PATH': '/usr/bin'}):
-                with patch('py_node.manager.os.pathsep', ':'):
+            with patch('py_node_manager.manager.os.environ.copy', return_value={'PATH': '/usr/bin'}):
+                with patch('py_node_manager.manager.os.pathsep', ':'):
                     env = manager.node_env
                     assert env is not None
                     assert '/path/to' in env['PATH']
@@ -181,8 +181,8 @@ class TestNodeManager:
         """Test _npm_path when node_path is set"""
         with patch.object(self.NodeManager, 'check_or_download_nodejs') as mock_check:
             mock_check.return_value = '/path/to/node'
-            with patch('py_node.manager.os.path.dirname', return_value='/path/to'):
-                with patch('py_node.manager.os.path.exists', return_value=True):
+            with patch('py_node_manager.manager.os.path.dirname', return_value='/path/to'):
+                with patch('py_node_manager.manager.os.path.exists', return_value=True):
                     manager = self.NodeManager(download_node=True, node_version='18.17.0')
                     npm_path = manager.npm_path
                     # Should contain the directory path
@@ -192,8 +192,8 @@ class TestNodeManager:
         """Test _npx_path when node_path is set"""
         with patch.object(self.NodeManager, 'check_or_download_nodejs') as mock_check:
             mock_check.return_value = '/path/to/node'
-            with patch('py_node.manager.os.path.dirname', return_value='/path/to'):
-                with patch('py_node.manager.os.path.exists', return_value=True):
+            with patch('py_node_manager.manager.os.path.dirname', return_value='/path/to'):
+                with patch('py_node_manager.manager.os.path.exists', return_value=True):
                     manager = self.NodeManager(download_node=True, node_version='18.17.0')
                     npx_path = manager.npx_path
                     # Should contain the directory path
@@ -209,7 +209,7 @@ class TestNodeManager:
     )
     def test_command_paths_without_node_path(self, platform_name, expected_npm, expected_npx):
         """Test command paths when node_path is None on different platforms"""
-        with patch('py_node.manager.platform.system', return_value=platform_name):
+        with patch('py_node_manager.manager.platform.system', return_value=platform_name):
             with patch.object(self.NodeManager, 'check_or_download_nodejs') as mock_check:
                 mock_check.return_value = None
                 manager = self.NodeManager(download_node=False, node_version='18.17.0')
@@ -228,23 +228,23 @@ class TestNodeManager:
     )
     def test_node_directory_name_generation(self, platform_name, machine, expected_node_dir):
         """Test that Node.js directory names are generated correctly for different platforms"""
-        with patch('py_node.manager.platform.system', return_value=platform_name):
-            with patch('py_node.manager.platform.machine', return_value=machine):
-                with patch('py_node.manager.os.path.dirname', return_value='/test/path'):
-                    with patch('py_node.manager.os.path.abspath', return_value='/test/path'):
+        with patch('py_node_manager.manager.platform.system', return_value=platform_name):
+            with patch('py_node_manager.manager.platform.machine', return_value=machine):
+                with patch('py_node_manager.manager.os.path.dirname', return_value='/test/path'):
+                    with patch('py_node_manager.manager.os.path.abspath', return_value='/test/path'):
                         # Mock the check_or_download_nodejs method to avoid actual Node.js checks
                         with patch.object(self.NodeManager, 'check_or_download_nodejs', return_value=None):
                             manager = self.NodeManager(download_node=True, node_version='18.17.0')
                             # Mock the download method to capture the node_dir value
-                            with patch('py_node.manager.urllib.request.urlretrieve'):
-                                with patch('py_node.manager.os.makedirs'):
-                                    with patch('py_node.manager.os.path.exists', return_value=False) as mock_exists:
-                                        with patch('py_node.manager.tarfile.open'):
-                                            with patch('py_node.manager.zipfile.ZipFile'):
-                                                with patch('py_node.manager.os.chmod'):
-                                                    with patch('py_node.manager.os.remove'):
+                            with patch('py_node_manager.manager.urllib.request.urlretrieve'):
+                                with patch('py_node_manager.manager.os.makedirs'):
+                                    with patch('py_node_manager.manager.os.path.exists', return_value=False) as mock_exists:
+                                        with patch('py_node_manager.manager.tarfile.open'):
+                                            with patch('py_node_manager.manager.zipfile.ZipFile'):
+                                                with patch('py_node_manager.manager.os.chmod'):
+                                                    with patch('py_node_manager.manager.os.remove'):
                                                         # Mock os.path.join to capture the node_dir parameter
-                                                        with patch('py_node.manager.os.path.join') as mock_join:
+                                                        with patch('py_node_manager.manager.os.path.join') as mock_join:
                                                             # Make join return a predictable value
                                                             mock_join.return_value = (
                                                                 f'/test/path/.nodejs_cache/{expected_node_dir}'
@@ -268,25 +268,25 @@ class TestNodeManager:
         expected_node_dir = 'node-v18.17.0-linux-x64'
         expected_executable = f'/test/path/.nodejs_cache/{expected_node_dir}/bin/node'
 
-        with patch('py_node.manager.platform.system', return_value=platform_name):
-            with patch('py_node.manager.platform.machine', return_value=machine):
-                with patch('py_node.manager.os.path.dirname', return_value='/test/path'):
-                    with patch('py_node.manager.os.path.abspath', return_value='/test/path'):
+        with patch('py_node_manager.manager.platform.system', return_value=platform_name):
+            with patch('py_node_manager.manager.platform.machine', return_value=machine):
+                with patch('py_node_manager.manager.os.path.dirname', return_value='/test/path'):
+                    with patch('py_node_manager.manager.os.path.abspath', return_value='/test/path'):
                         # Mock the check_or_download_nodejs method to avoid actual Node.js checks
                         with patch.object(self.NodeManager, 'check_or_download_nodejs', return_value=None):
                             manager = self.NodeManager(download_node=True, node_version='18.17.0')
                             # Mock os.path.exists to return True for the executable path
                             with patch(
-                                'py_node.manager.os.path.exists', side_effect=lambda path: path == expected_executable
+                                'py_node_manager.manager.os.path.exists', side_effect=lambda path: path == expected_executable
                             ) as mock_exists:
-                                with patch('py_node.manager.logger') as mock_logger:
+                                with patch('py_node_manager.manager.logger') as mock_logger:
                                     # Mock other methods to avoid actual download
-                                    with patch('py_node.manager.urllib.request.urlretrieve'):
-                                        with patch('py_node.manager.os.makedirs'):
-                                            with patch('py_node.manager.tarfile.open'):
-                                                with patch('py_node.manager.zipfile.ZipFile'):
-                                                    with patch('py_node.manager.os.chmod'):
-                                                        with patch('py_node.manager.os.remove'):
+                                    with patch('py_node_manager.manager.urllib.request.urlretrieve'):
+                                        with patch('py_node_manager.manager.os.makedirs'):
+                                            with patch('py_node_manager.manager.tarfile.open'):
+                                                with patch('py_node_manager.manager.zipfile.ZipFile'):
+                                                    with patch('py_node_manager.manager.os.chmod'):
+                                                        with patch('py_node_manager.manager.os.remove'):
                                                             result = manager.download_nodejs()
 
                                                             # Verify that the cached Node.js is used
@@ -304,27 +304,27 @@ class TestNodeManager:
         machine = 'x86_64'
         expected_url = 'https://nodejs.org/dist/v18.17.0/node-v18.17.0-linux-x64.tar.xz'
 
-        with patch('py_node.manager.platform.system', return_value=platform_name):
-            with patch('py_node.manager.platform.machine', return_value=machine):
-                with patch('py_node.manager.os.path.dirname', return_value='/test/path'):
-                    with patch('py_node.manager.os.path.abspath', return_value='/test/path'):
+        with patch('py_node_manager.manager.platform.system', return_value=platform_name):
+            with patch('py_node_manager.manager.platform.machine', return_value=machine):
+                with patch('py_node_manager.manager.os.path.dirname', return_value='/test/path'):
+                    with patch('py_node_manager.manager.os.path.abspath', return_value='/test/path'):
                         # Create manager with is_cli=True using direct instantiation to avoid __init__ issues
-                        from py_node.manager import NodeManager
+                        from py_node_manager.manager import NodeManager
 
                         manager = NodeManager.__new__(NodeManager)
                         manager.download_node = True
                         manager.node_version = '18.17.0'
                         manager.is_cli = True
                         # Mock os.path.exists to return False to force download
-                        with patch('py_node.manager.os.path.exists', return_value=False):
-                            with patch('py_node.manager.logger') as mock_logger:
+                        with patch('py_node_manager.manager.os.path.exists', return_value=False):
+                            with patch('py_node_manager.manager.logger') as mock_logger:
                                 # Mock the download method
-                                with patch('py_node.manager.urllib.request.urlretrieve'):
-                                    with patch('py_node.manager.os.makedirs'):
-                                        with patch('py_node.manager.tarfile.open'):
-                                            with patch('py_node.manager.zipfile.ZipFile'):
-                                                with patch('py_node.manager.os.chmod'):
-                                                    with patch('py_node.manager.os.remove'):
+                                with patch('py_node_manager.manager.urllib.request.urlretrieve'):
+                                    with patch('py_node_manager.manager.os.makedirs'):
+                                        with patch('py_node_manager.manager.tarfile.open'):
+                                            with patch('py_node_manager.manager.zipfile.ZipFile'):
+                                                with patch('py_node_manager.manager.os.chmod'):
+                                                    with patch('py_node_manager.manager.os.remove'):
                                                         try:
                                                             manager.download_nodejs()
                                                         except Exception:
@@ -341,7 +341,7 @@ class TestNodeManager:
         """Test check_or_download_nodejs raises error when download_node=False and Node.js not found"""
         with patch.object(self.NodeManager, 'check_nodejs_available', return_value=(False, '')):
             # Create manager with download_node=False using direct instantiation to avoid __init__ issues
-            from py_node.manager import NodeManager
+            from py_node_manager.manager import NodeManager
 
             manager = NodeManager.__new__(NodeManager)
             manager.download_node = False
@@ -358,7 +358,7 @@ class TestNodeManager:
         """Test check_or_download_nodejs raises error when download_node=False and is_cli=True and Node.js not found"""
         with patch.object(self.NodeManager, 'check_nodejs_available', return_value=(False, '')):
             # Create manager with download_node=False and is_cli=True using direct instantiation
-            from py_node.manager import NodeManager
+            from py_node_manager.manager import NodeManager
 
             manager = NodeManager.__new__(NodeManager)
             manager.download_node = False
@@ -375,7 +375,7 @@ class TestNodeManager:
         """Test check_or_download_nodejs returns the result of download_nodejs when Node.js is not found and download_node=True"""
         with patch.object(self.NodeManager, 'check_nodejs_available', return_value=(False, '')):
             # Create manager with download_node=True using direct instantiation
-            from py_node.manager import NodeManager
+            from py_node_manager.manager import NodeManager
 
             manager = NodeManager.__new__(NodeManager)
             manager.download_node = True

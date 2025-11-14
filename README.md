@@ -1,11 +1,11 @@
-# py-node
+# py-node-manager
 
 A tool library for conveniently using Node.js in Python.
 
-[![Tests](https://github.com/HogaStack/py-node/workflows/Tests/badge.svg)](https://github.com/HogaStack/py-node/actions)
-[![Coverage](https://codecov.io/gh/HogaStack/py-node/branch/main/graph/badge.svg)](https://codecov.io/gh/HogaStack/py-node)
-[![GitHub](https://shields.io/badge/license-MIT-informational)](https://github.com/HogaStack/py-node/blob/main/LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/py-node.svg?color=dark-green)](https://pypi.org/project/py-node/)
+[![Tests](https://github.com/HogaStack/py-node-manager/workflows/Tests/badge.svg)](https://github.com/HogaStack/py-node-manager/actions)
+[![Coverage](https://codecov.io/gh/HogaStack/py-node-manager/branch/main/graph/badge.svg)](https://codecov.io/gh/HogaStack/py-node-manager)
+[![GitHub](https://shields.io/badge/license-MIT-informational)](https://github.com/HogaStack/py-node-manager/blob/main/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/py-node-manager.svg?color=dark-green)](https://pypi.org/project/py-node-manager/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 English | [简体中文](./README-zh_CN.md)
@@ -13,7 +13,7 @@ English | [简体中文](./README-zh_CN.md)
 ## Installation
 
 ```bash
-pip install py-node
+pip install py-node-manager
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ pip install py-node
 ### Basic Usage
 
 ```python
-from py_node import NodeManager
+from py_node_manager import NodeManager
 
 # Create NodeManager instance
 # download_node=True means automatically download Node.js if not found in system
@@ -41,7 +41,7 @@ node_env = manager.node_env    # Environment variables dictionary
 
 ```python
 import subprocess
-from py_node import NodeManager
+from py_node_manager import NodeManager
 
 manager = NodeManager(download_node=True, node_version='18.17.0')
 
@@ -58,7 +58,7 @@ print(result.stdout)
 ### Without Automatic Node.js Download
 
 ```python
-from py_node import NodeManager
+from py_node_manager import NodeManager
 
 # Will raise an exception if Node.js is not found in the system
 manager = NodeManager(download_node=False, node_version='18.17.0')
@@ -73,8 +73,6 @@ This project uses pytest for testing with 100% code coverage.
 To run the tests in the conda environment:
 
 ```bash
-# Activate the conda environment
-conda activate py-node
 
 # Install dependencies
 pip install -e .
@@ -84,7 +82,7 @@ pip install -r requirements-dev.txt
 pytest tests/ -v
 
 # Run tests with coverage report
-pytest tests/ --cov=py_node --cov-report=term-missing
+pytest tests/ --cov=py_node_manager --cov-report=term-missing
 ```
 
 ### Test Structure

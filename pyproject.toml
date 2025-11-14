@@ -3,7 +3,7 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "py-node"
+name = "py-node-manager"
 version = "0.1.0"
 description = "A tool library for conveniently using Node.js in Python"
 readme = "README.md"
@@ -23,13 +23,13 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/HogaStack/py-node"
-Documentation = "https://github.com/HogaStack/py-node"
-Repository = "https://github.com/HogaStack/py-node"
-Issues = "https://github.com/HogaStack/py-node/issues"
+Homepage = "https://github.com/HogaStack/py-node-manager"
+Documentation = "https://github.com/HogaStack/py-node-manager"
+Repository = "https://github.com/HogaStack/py-node-manager"
+Issues = "https://github.com/HogaStack/py-node-manager/issues"
 
 [project.optional-dependencies]
 dev = ["build", "pytest>=6.0.0", "pytest-cov>=2.10.0", "twine"]
 
 [tool.setuptools]
-packages = ["py_node"]
+packages = ["py_node_manager"]

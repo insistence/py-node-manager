@@ -1,11 +1,11 @@
-# py-node
+# py-node-manager
 
 一个方便在Python中使用Node.js的工具库。
 
-[![Tests](https://github.com/HogaStack/py-node/workflows/Tests/badge.svg)](https://github.com/HogaStack/py-node/actions)
-[![Coverage](https://codecov.io/gh/HogaStack/py-node/branch/main/graph/badge.svg)](https://codecov.io/gh/HogaStack/py-node)
-[![GitHub](https://shields.io/badge/license-MIT-informational)](https://github.com/HogaStack/py-node/blob/main/LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/py-node.svg?color=dark-green)](https://pypi.org/project/py-node/)
+[![Tests](https://github.com/HogaStack/py-node-manager/workflows/Tests/badge.svg)](https://github.com/HogaStack/py-node-manager/actions)
+[![Coverage](https://codecov.io/gh/HogaStack/py-node-manager/branch/main/graph/badge.svg)](https://codecov.io/gh/HogaStack/py-node-manager)
+[![GitHub](https://shields.io/badge/license-MIT-informational)](https://github.com/HogaStack/py-node-manager/blob/main/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/py-node-manager.svg?color=dark-green)](https://pypi.org/project/py-node-manager/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 简体中文 | [English](./README.md)
@@ -13,7 +13,7 @@
 ## 安装
 
 ```bash
-pip install py-node
+pip install py-node-manager
 ```
 
 ## 使用方法
@@ -21,7 +21,7 @@ pip install py-node
 ### 基本用法
 
 ```python
-from py_node import NodeManager
+from py_node_manager import NodeManager
 
 # 创建NodeManager实例
 # download_node=True 表示如果系统中没有Node.js则自动下载
@@ -41,7 +41,7 @@ node_env = manager.node_env    # 环境变量字典
 
 ```python
 import subprocess
-from py_node import NodeManager
+from py_node_manager import NodeManager
 
 manager = NodeManager(download_node=True, node_version='18.17.0')
 
@@ -58,7 +58,7 @@ print(result.stdout)
 ### 不自动下载Node.js
 
 ```python
-from py_node import NodeManager
+from py_node_manager import NodeManager
 
 # 如果系统中没有Node.js将会抛出异常
 manager = NodeManager(download_node=False, node_version='18.17.0')
@@ -73,8 +73,6 @@ manager = NodeManager(download_node=False, node_version='18.17.0')
 在conda环境中运行测试：
 
 ```bash
-# 激活conda环境
-conda activate py-node
 
 # 安装依赖
 pip install -e .
@@ -84,7 +82,7 @@ pip install -r requirements-dev.txt
 pytest tests/ -v
 
 # 运行测试并生成覆盖率报告
-pytest tests/ --cov=py_node --cov-report=term-missing
+pytest tests/ --cov=py_node_manager --cov-report=term-missing
 ```
 
 ### 测试结构
